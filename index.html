@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>L2 ISIL B - Semestre 1</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f2f2f2;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      background-color: #fff;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    input[type="number"] {
+      width: 60px;
+      padding: 4px;
+    }
+
+    button {
+      padding: 10px 15px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>L2 ISIL B - Semestre 1</h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Module</th>
+        <th>Coef</th>
+        <th>Crédits</th>
+        <th>Note TD</th>
+        <th>Note TP</th>
+        <th>Note Exam</th>
+        <th>Moyenne Module</th>
+        <th>Crédits Obtenus</th>
+      </tr>
+    </thead>
+    <tbody id="moduleTable">
+      <!-- JS remplit ceci -->
+    </tbody>
+  </table>
+
+  <button onclick="calculateSemestre1()">Calculer</button>
+  <p><strong>Moyenne Générale:</strong> <span id="average">--</span></p>
+  <p><strong>Total Crédits Obtenus:</strong> <span id="creditsEarned">--</span></p>
+
+  <script>
+    const semestre1Modules = [
+      { name: 'SI', coef: 3, credits: 4 },
+      { name: 'ARCHI(DERBALLLL YA RBI)', coef: 3, credits: 4 },
+      { name: 'ALGO(hamdah allah la trb7ak)', coef: 3, credits: 5 },
+      { name: 'Analyse Numérique', coef: 2, credits: 4 },
+      { name: 'logique', coef: 2, credits: 4 },
+      { name: 'Proba(ya bouibed allah yahdik)', coef: 2, credits: 4 },
+      { name: 'POO', coef: 2, credits: 3 },
+      { name: 'ANGLAIS(SRA9)', coef: 1, credits: 2 }
+    ];
+
+    function generateModuleTable() {
+      const table = document.getElementById('moduleTable');
+      table.innerHTML = '';
+
+      semestre1Modules.forEach((module, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${module.name}</td>
+          <td class="coef">${module.coef}</td>
+          <td class="credits">${module.credits}</td>
+          <td><input type="number" class="td" data-index="${index}" /></td>
+          <td><input type="number" class="tp" data-index="${index}" /></td>
+          <td><input type="number" class="exam" data-index="${index}" /></td>
+          <td class="moyenne">--</td>
+          <td class="creditObtained">--</td>
+        `;
+        table.appendChild(row);
+      });
+    }
+
+    function calculateSemestre1() {
+      let totalWeighted = 0;
+      let totalCoef = 0;
+      let totalCredits = 0;
+
+      const rows = document.querySelectorAll('#moduleTable tr');
+
+      rows.forEach((row, i) => {
+        const td = parseFloat(row.querySelector('.td').value) || 0;
+        const tp = parseFloat(row.querySelector('.tp').value) || 0;
+        const exam = parseFloat(row.querySelector('.exam').value) || 0;
+        const coef = semestre1Modules[i].coef;
+        const credits = semestre1Modules[i].credits;
+
+        const moyenne = td * 0.2 + tp * 0.3 + exam * 0.5;
+        const creditObtained = moyenne >= 10 ? credits : 0;
+
+        row.querySelector('.moyenne').textContent = moyenne.toFixed(2);
+        row.querySelector('.creditObtained').textContent = creditObtained;
+
+        totalWeighted += moyenne * coef;
+        totalCoef += coef;
+        totalCredits += creditObtained;
+      });
+
+      const moyenneGenerale = (totalWeighted / totalCoef).toFixed(2);
+      document.getElementById("average").textContent = moyenneGenerale;
+      document.getElementById("creditsEarned").textContent = totalCredits;
+    }
+
+    window.onload = generateModuleTable;
+  </script>
+
+</body>
+</html>
